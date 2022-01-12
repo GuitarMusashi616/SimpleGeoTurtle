@@ -42,10 +42,12 @@ end
 local function digToY(dy)
   if dy > 0 then
     for i=1,dy do
+      turtle.digUp()
       turtle.up()
     end
   elseif dy < 0 then
     for i=1,math.abs(dy) do
+      turtle.digDown()
       turtle.down()
     end
   end
