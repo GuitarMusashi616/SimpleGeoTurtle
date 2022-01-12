@@ -10,14 +10,8 @@ function filter(blocks, needle)
   end
   return output  
 end
-  
-  
-function main(needle)
-  needle = needle or "ore"
-  while turtle.getFuelLevel() < 100 do
-    print("needs more fuel, retrying in 30 seconds")
-    sleep(30)
-  end
+
+function scan()
   turtle.select(16)
   turtle.digDown()
   turtle.placeDown()
@@ -37,9 +31,31 @@ function main(needle)
   turtle.digDown()
   
   local ores = filter(blocks, needle)
+  local x,y,z = gps.locate()
   
+  local targets = {}
   for i,block in pairs(ores) do
-    digTo(block.x, block.y-1, block.z)
+    targets[#targets+1] = {x=x+block.x, y=y+block.y-1, z=z+block.z}
+  end
+  return targets
+end
+
+function checkFuel()
+  while turtle.getFuelLevel() < 100 do
+    print("needs more fuel, retrying in 30 seconds")
+    sleep(30)
+    shell.run("refuel all")
+  end
+end
+  
+  
+function main(needle)
+  needle = needle or "ore"
+  checkFuel()
+  local targets = scan()
+  
+  for i,coord in pairs(targets) do
+    digTo(coord.x, coord.y, coord.z)
   end
 end
 

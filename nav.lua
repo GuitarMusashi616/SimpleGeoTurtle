@@ -15,6 +15,9 @@ local rightTurnResult = {
 }
 
 local facing
+local x
+local y
+local z
 
 local function turnRight(num)
   for i=1,num do
@@ -69,15 +72,15 @@ local function calibrate()
   elseif dz < 0 and dx == 0 then
     facing = "north"
   end
-  turtle.back()
-end
-  
-function digTo(dx,dy,dz)
-  calibrate()
+  x,y,z = xf,yf,zf
   if not facing then
     error("could not calibrate using gps")
   end
-  digToXZ(dx, "east", "west")
-  digToXZ(dz, "south", "north")
-  digToY(dy)
+end
+  
+function digTo(x,y,z)
+  calibrate()
+  digToXZ(x, "east", "west")
+  digToXZ(y, "south", "north")
+  digToY(z)
 end
